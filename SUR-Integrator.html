@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUR-Integrator</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-dark: #1e1b4b;
+            --accent: #06b6d4;
+            --accent-hover: #0891b2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 0 2rem;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.4rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .logo-icon { font-size: 1.8rem; }
+
+        nav { display: flex; gap: 8px; }
+
+        nav a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            width: 100%;
+        }
+
+        footer {
+            background: var(--primary-dark);
+            color: rgba(255,255,255,0.7);
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        .footer-inner p { margin: 0.25rem 0; }
+        .footer-inner strong { color: white; }
+
+        .screen { display: none; animation: fadeIn 0.4s; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .hero { text-align: center; padding: 3rem 0; }
+
+        .hero-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary-dark);
+            margin: 0 0 1rem;
+            font-weight: 800;
+            line-height: 1.2;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .btn-big {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1.25rem 2rem;
+            font-size: 1.05rem;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+            border: none;
+            cursor: pointer;
+            min-width: 220px;
+            justify-content: center;
+        }
+
+        .btn-big:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-icon { font-size: 1.4rem; }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-cabinet {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-cabinet:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+            color: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+            border: 1px solid var(--border);
+        }
+
+        .feature:hover { transform: translateY(-4px); }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            color: var(--primary-dark);
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .feature p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+        }
+
+        .login-card { max-width: 420px; }
+
+        .card h2 {
+            color: var(--primary-dark);
+            margin: 0 0 0.5rem;
+            font-size: 1.75rem;
+        }
+
+        .hint {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group { margin-bottom: 1.25rem; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .form-group small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-accent {
+            background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+        }
+
+        .alert {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            border-left: 4px solid;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border-color: var(--danger);
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border-color: var(--success);
+        }
+
+        .big-id {
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            background: #ecfdf5;
+            padding: 6px 14px;
+            border-radius: 8px;
+            letter-spacing: 3px;
+            color: var(--success);
+            font-weight: 700;
+            margin: 0.5rem 0;
+            border: 2px dashed var(--success);
+        }
+
+        .result-box {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-top: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .risk-header {
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .risk-header h2 { margin: 0 0 0.25rem; font-size: 1.5rem; }
+        .risk-header p { margin: 0; opacity: 0.95; font-family: monospace; letter-spacing: 2px; }
+
+        .risk-green { background: linear-gradient(135deg, #10b981, #059669); }
+        .risk-yellow { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .risk-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        .inspector-note {
+            background: #fffbeb;
+            border-left: 5px solid var(--warning);
+            padding: 18px;
+            margin: 20px;
+            border-radius: 10px;
+            color: #78350f;
+        }
+
+        .inspector-note.danger {
+            background: #fef2f2;
+            border-left-color: var(--danger);
+            color: #7f1d1d;
+        }
+
+        .details-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .details-table tr:last-child td { border-bottom: none; }
+
+        .details-table td:first-child {
+            color: var(--text-muted);
+            width: 40%;
+            font-size: 0.95rem;
+        }
+
+        .details-table td:last-child {
+            font-weight: 600;
+            text-align: right;
+            color: var(--text);
+        }
+
+        .total-row {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+        }
+
+        .total-row td:last-child {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+
+        .profile-info { flex: 1; min-width: 200px; }
+        .profile-info h2 {
+            margin: 0 0 4px;
+            color: white;
+            font-size: 1.5rem;
+        }
+        .profile-contact { margin: 0; opacity: 0.95; font-size: 0.95rem; }
+        .profile-email { margin: 4px 0 0; opacity: 0.8; font-size: 0.9rem; }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover { transform: translateY(-2px); }
+
+        .stat-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-content { flex: 1; }
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .dashboard-table {
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border-collapse: collapse;
+            border: 1px solid var(--border);
+        }
+
+        .dashboard-table th {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .dashboard-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+
+        .dashboard-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .dashboard-table tbody tr:last-child td { border-bottom: none; }
+
+        .mono {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 1px;
+        }
+
+        .route {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-green {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-yellow {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-red {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        @media (max-width: 768px) {
+            .header-inner { flex-direction: column; height: auto; padding: 1rem 0; gap: 1rem; }
+            nav { flex-wrap: wrap; justify-content: center; }
+            .hero h1 { font-size: 2rem; }
+            .hero-buttons { flex-direction: column; align-items: center; }
+            .btn-big { width: 100%; max-width: 300px; }
+            .profile-header { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-inner">
+            <div class="logo" onclick="showScreen('home')">
+                <span class="logo-icon"></span>
+                <span class="logo-text">SUR-Integrator</span>
+            </div>
+            <nav>
+                <a onclick="showScreen('home')">Главная</a>
+                <a onclick="showScreen('check')">Проверить сделку</a>
+                <a onclick="showScreen('add')">Добавить данные</a>
+                <a onclick="showScreen('login')">Личный кабинет</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ГЛАВНАЯ -->
+        <div id="home" class="screen active">
+            <div class="hero">
+                <div class="hero-badge">🛃 Система СУР СВХ</div>
+                <h1>Интеллектуальная система контроля<br>импортных поставок</h1>
+                <p class="subtitle">Автоматизированный расчёт таможенных платежей и оценка рисков по системе управления рисками</p>
+
+                <div class="hero-buttons">
+                    <button class="btn-big btn-check" onclick="showScreen('check')">
+                        <span class="btn-icon">🔍</span>
+                        <span>Проверить сделку</span>
+                    </button>
+                    <button class="btn-big btn-cabinet" onclick="showScreen('login')">
+                        <span class="btn-icon">👤</span>
+                        <span>Личный кабинет</span>
+                    </button>
+                    <button class="btn-big btn-add" onclick="showScreen('add')">
+                        <span class="btn-icon">📎</span>
+                        <span>Добавить данные</span>
+                    </button>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Быстрая проверка</h3>
+                        <p>Получите статус декларации по уникальному ID за секунды</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon"></div>
+                        <h3>Точный расчёт</h3>
+                        <p>Автоматический расчёт пошлин, НДС и таможенных сборов</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Оценка рисков</h3>
+                        <p>Три уровня СУР: зелёный, жёлтый, красный</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ПРОВЕРКА СДЕЛКИ -->
+        <div id="check" class="screen">
+            <div class="card">
+                <h2> Проверка импортной сделки</h2>
+                <p class="hint">Введите ID декларации для получения статуса выпуска.</p>
+
+                <div id="checkError" class="alert alert-error" style="display:none"></div>
+
+                <div class="form-group">
+                    <label>ID Сделки</label>
+                    <input type="text" id="searchId" placeholder="Введите ID" style="text-transform: uppercase; font-family: monospace; font-size: 1.2rem; text-align: center;" />
+                </div>
+                <button class="btn-submit" onclick="checkDeal()">Найти сделку</button>
+            </div>
+
+            <div id="resultBlock" style="display:none"></div>
+        </div>
+
+        <!-- ДОБАВИТЬ ДАННЫЕ -->
+        <div id="add" class="screen">
+            <div class="card">
+                <h2>📎 Загрузка данных для проверки</h2>
+                <p class="hint">Заполните информацию об импортной поставке. Система автоматически рассчитает платежи и присвоит ID.</p>
+
+                <div id="addSuccess" class="alert alert-success" style="display:none"></div>
+
+                <div class="form-group">
+                    <label>Страна и город отправления</label>
+                    <input type="text" id="newSender" placeholder="Китай, г. Шанхай" required />
+                </div>
+                <div class="form-group">
+                    <label>Страна и город назначения</label>
+                    <input type="text" id="newDest" placeholder="Россия, г. Владивосток" required />
+                </div>
+                <div class="form-group">
+                    <label>Товар</label>
+                    <input type="text" id="newProduct" placeholder="Смартфоны" required />
+                </div>
+                <div class="form-group">
+                    <label>Код ТНВЭД (10 цифр)</label>
+                    <input type="text" id="newCode" placeholder="8517 13 000 0" maxlength="14" />
+                </div>
+                <div class="form-group">
+                    <label>Таможенная стоимость (RUB)</label>
+                    <input type="number" id="newValue" placeholder="1000000" min="1" step="0.01" required />
+                </div>
+                <div class="form-group">
+                    <label>Загрузка скан-копий документов</label>
+                    <input type="file" multiple disabled style="background: #eee; cursor: not-allowed;" />
+                    <small>*В демо-режиме загрузка файлов недоступна</small>
+                </div>
+                <button class="btn-submit btn-accent" onclick="addNewDeal()">Отправить на проверку</button>
+            </div>
+        </div>
+
+        <!-- ВХОД -->
+        <div id="login" class="screen">
+            <div class="card login-card">
+                <h2>👤 Вход в систему</h2>
+
+                <div id="loginError" class="alert alert-error" style="display:none"></div>
+
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" id="username" placeholder="Введите логин" required />
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" id="password" placeholder="Введите пароль" required />
+                </div>
+                <button class="btn-submit" onclick="doLogin()">Войти</button>
+            </div>
+        </div>
+
+        <!-- ЛИЧНЫЙ КАБИНЕТ -->
+        <div id="dashboard" class="screen">
+            <div id="dashboardContent"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <p><strong>© 2026 SUR-Integrator.Web</strong></p>
+            <p>Интеграционный модуль для СВХ | Выпускная квалификационная работа</p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== ДАННЫЕ =====
+        const users = {
+            'ved': { login: 'ved', password: '1234', companyName: 'ООО «ВЭД-Сервис»', contactPerson: 'Петрова Анна Ивановна', email: 'petrova@ved-service.ru' },
+            'global': { login: 'global', password: '1234', companyName: 'ООО «Глобал Трейд»', contactPerson: 'Сидоров Михаил Петрович', email: 'sidorov@globaltrade.ru' },
+            'ivanov': { login: 'ivanov', password: '1234', companyName: 'ИП Иванов А.С.', contactPerson: 'Иванов Алексей Сергеевич', email: 'ivanov@mail.ru' },
+            'import': { login: 'import', password: '1234', companyName: 'АО «Импорт-Экспорт»', contactPerson: 'Кузнецова Елена Владимировна', email: 'kuznetsova@import-export.ru' },
+            'trans': { login: 'trans', password: '1234', companyName: 'ООО «ТрансЛогистик»', contactPerson: 'Волков Дмитрий Андреевич', email: 'volkov@translog.ru' },
+            'pacific': { login: 'pacific', password: '1234', companyName: 'ООО «Пасифик Карго»', contactPerson: 'Морозова Ольга Николаевна', email: 'morozova@pacific-cargo.ru' },
+            'euro': { login: 'euro', password: '1234', companyName: 'ООО «ЕвроИмпорт»', contactPerson: 'Белов Сергей Владимирович', email: 'belov@euroimport.ru' },
+            'asia': { login: 'asia', password: '1234', companyName: 'ООО «Азия Трейдинг»', contactPerson: 'Новикова Татьяна Павловна', email: 'novikova@asia-trading.ru' },
+            'cargo': { login: 'cargo', password: '1234', companyName: 'ООО «Карго Плюс»', contactPerson: 'Григорьев Павел Игоревич', email: 'grigoriev@cargoplus.ru' },
+            'trade': { login: 'trade', password: '1234', companyName: 'ООО «Трейд Мастер»', contactPerson: 'Соколова Мария Дмитриевна', email: 'sokolova@trademaster.ru' }
+        };
+
+        let checkDeals = [
+            { id: '100001', sender: 'Китай, г. Шанхай', destination: 'Россия, г. Владивосток', product: 'Ноутбуки Lenovo ThinkPad', tnvedCode: '8471 30 000 0', value: 13800000, dutyRate: 5, vatRate: 22, risk: 'green', note: '' },
+            { id: '100002', sender: 'Турция, г. Стамбул', destination: 'Россия, г. Москва', product: 'Куртки мужские', tnvedCode: '6101 30 000 0', value: 4140000, dutyRate: 10, vatRate: 22, risk: 'yellow', note: '⚠️ Расхождение в количестве мест на 3%. Требуется сертификат соответствия ТР ТС 017/2011.' },
+            { id: '100003', sender: 'Южная Корея, г. Сеул', destination: 'Россия, г. Новосибирск', product: 'Автомобили Hyundai Tucson', tnvedCode: '8703 23 900 9', value: 47840000, dutyRate: 17, vatRate: 22, risk: 'red', note: '🚫 Критическое расхождение инвойсной стоимости (>15%). Отсутствие СБКТС и ОТТС. Назначен таможенный досмотр.' },
+            { id: '100004', sender: 'Китай, г. Циндао', destination: 'Россия, г. Санкт-Петербург', product: 'Рыба замороженная (минтай)', tnvedCode: '0303 67 000 0', value: 7176000, dutyRate: 12, vatRate: 22, risk: 'yellow', note: '️ Требуется ветеринарный сертификат. Проверить срок годности продукции.' },
+            { id: '100005', sender: 'Китай, г. Шэньчжэнь', destination: 'Россия, г. Екатеринбург', product: 'Смартфоны Xiaomi', tnvedCode: '8517 13 000 0', value: 8464000, dutyRate: 5, vatRate: 22, risk: 'green', note: '' },
+            { id: '100006', sender: 'Германия, г. Берлин', destination: 'Россия, г. Москва', product: 'Оборудование для лабораторий', tnvedCode: '9027 80 170 0', value: 22500000, dutyRate: 0, vatRate: 22, risk: 'green', note: '' },
+            { id: '100007', sender: 'Италия, г. Милан', destination: 'Россия, г. Санкт-Петербург', product: 'Обувь кожаная женская', tnvedCode: '6403 51 000 0', value: 5600000, dutyRate: 15, vatRate: 22, risk: 'yellow', note: '⚠️ Требуется маркировка «Честный знак». Проверить наличие DataMatrix кодов.' },
+            { id: '100008', sender: 'Япония, г. Токио', destination: 'Россия, г. Владивосток', product: 'Запчасти для станков ЧПУ', tnvedCode: '8466 93 700 0', value: 18900000, dutyRate: 5, vatRate: 22, risk: 'green', note: '' },
+            { id: '100009', sender: 'Индия, г. Дели', destination: 'Россия, г. Новороссийск', product: 'Кофе натуральный жареный', tnvedCode: '0901 21 000 0', value: 3200000, dutyRate: 10, vatRate: 22, risk: 'yellow', note: '️ Требуется фитосанитарный сертификат. Проверить условия транспортировки.' },
+            { id: '100010', sender: 'США, г. Лос-Анджелес', destination: 'Россия, г. Владивосток', product: 'Самолёт лёгкий (Cessna)', tnvedCode: '8802 20 000 0', value: 85000000, dutyRate: 0, vatRate: 22, risk: 'red', note: '🚫 Требуется разрешение Минпромторга. Отсутствие документов о происхождении. Назначен полный досмотр.' }
+        ];
+
+        const userDeals = {
+            'ved': [
+                { id: '200001', sender: 'Германия, г. Гамбург', destination: 'Россия, г. Хабаровск', product: 'Электронные компоненты', tnvedCode: '8542 31 000 0', value: 5980000, dutyRate: 0, vatRate: 22, risk: 'green' },
+                { id: '200002', sender: 'Китай, г. Тяньцзинь', destination: 'Россия, г. Красноярск', product: 'Мебель офисная деревянная', tnvedCode: '9403 60 100 0', value: 16560000, dutyRate: 15, vatRate: 22, risk: 'yellow' },
+                { id: '200003', sender: 'Италия, г. Милан', destination: 'Россия, г. Казань', product: 'Промышленное оборудование', tnvedCode: '8479 89 970 0', value: 31280000, dutyRate: 5, vatRate: 22, risk: 'red' }
+            ],
+            'global': [
+                { id: '300001', sender: 'Япония, г. Иокогама', destination: 'Россия, г. Владивосток', product: 'Автозапчасти Toyota', tnvedCode: '8708 99 990 0', value: 11500000, dutyRate: 5, vatRate: 22, risk: 'green' },
+                { id: '300002', sender: 'Китай, г. Гуанчжоу', destination: 'Россия, г. Москва', product: 'Бытовая техника Midea', tnvedCode: '8509 40 000 0', value: 8188000, dutyRate: 10, vatRate: 22, risk: 'yellow' }
+            ],
+            'ivanov': [
+                { id: '400001', sender: 'Турция, г. Бурса', destination: 'Россия, г. Москва', product: 'Текстиль (постельное бельё)', tnvedCode: '6302 31 000 0', value: 3864000, dutyRate: 10, vatRate: 22, risk: 'yellow' },
+                { id: '400002', sender: 'Китай, г. Иу', destination: 'Россия, г. Новосибирск', product: 'Галантерея', tnvedCode: '4202 21 000 0', value: 1702000, dutyRate: 12, vatRate: 22, risk: 'green' }
+            ],
+            'import': [
+                { id: '500001', sender: 'Германия, г. Мюнхен', destination: 'Россия, г. Москва', product: 'Станки фрезерные', tnvedCode: '8459 61 000 0', value: 44160000, dutyRate: 5, vatRate: 22, risk: 'red' },
+                { id: '500002', sender: 'Китай, г. Нинбо', destination: 'Россия, г. Владивосток', product: 'Металлопрокат', tnvedCode: '7208 51 000 0', value: 19780000, dutyRate: 10, vatRate: 22, risk: 'yellow' }
+            ],
+            'trans': [
+                { id: '600001', sender: 'Китай, г. Шанхай', destination: 'Россия, г. Санкт-Петербург', product: 'Контейнеры грузовые', tnvedCode: '8609 00 900 0', value: 12400000, dutyRate: 5, vatRate: 22, risk: 'green' },
+                { id: '600002', sender: 'Южная Корея, г. Пусан', destination: 'Россия, г. Владивосток', product: 'Судовые двигатели', tnvedCode: '8408 10 000 0', value: 28900000, dutyRate: 0, vatRate: 22, risk: 'yellow' }
+            ],
+            'pacific': [
+                { id: '700001', sender: 'Китай, г. Далянь', destination: 'Россия, г. Владивосток', product: 'Морепродукты (креветки)', tnvedCode: '0306 17 000 0', value: 6700000, dutyRate: 12, vatRate: 22, risk: 'yellow' },
+                { id: '700002', sender: 'Вьетнам, г. Хошимин', destination: 'Россия, г. Новороссийск', product: 'Рис шлифованный', tnvedCode: '1006 30 000 0', value: 2100000, dutyRate: 5, vatRate: 10, risk: 'green' }
+            ],
+            'euro': [
+                { id: '800001', sender: 'Франция, г. Париж', destination: 'Россия, г. Москва', product: 'Парфюмерия и косметика', tnvedCode: '3304 99 000 0', value: 9800000, dutyRate: 6.5, vatRate: 22, risk: 'yellow' },
+                { id: '800002', sender: 'Испания, г. Барселона', destination: 'Россия, г. Санкт-Петербург', product: 'Оливковое масло', tnvedCode: '1509 10 100 0', value: 4500000, dutyRate: 10, vatRate: 22, risk: 'green' }
+            ],
+            'asia': [
+                { id: '900001', sender: 'Китай, г. Пекин', destination: 'Россия, г. Иркутск', product: 'Строительные материалы', tnvedCode: '6907 21 000 0', value: 15600000, dutyRate: 10, vatRate: 22, risk: 'yellow' },
+                { id: '900002', sender: 'Таиланд, г. Бангкок', destination: 'Россия, г. Владивосток', product: 'Резина натуральная', tnvedCode: '4001 21 000 0', value: 7800000, dutyRate: 5, vatRate: 22, risk: 'green' }
+            ],
+            'cargo': [
+                { id: '110001', sender: 'Китай, г. Ухань', destination: 'Россия, г. Екатеринбург', product: 'Медицинское оборудование', tnvedCode: '9018 90 840 0', value: 19200000, dutyRate: 0, vatRate: 22, risk: 'green' },
+                { id: '110002', sender: 'Индия, г. Мумбаи', destination: 'Россия, г. Москва', product: 'Фармацевтические субстанции', tnvedCode: '2933 99 000 0', value: 11400000, dutyRate: 5, vatRate: 22, risk: 'yellow' }
+            ],
+            'trade': [
+                { id: '120001', sender: 'Польша, г. Варшава', destination: 'Россия, г. Смоленск', product: 'Молочная продукция', tnvedCode: '0402 91 000 0', value: 5300000, dutyRate: 15, vatRate: 10, risk: 'yellow' },
+                { id: '120002', sender: 'Беларусь, г. Минск', destination: 'Россия, г. Москва', product: 'Тракторы сельскохозяйственные', tnvedCode: '8701 94 900 0', value: 24700000, dutyRate: 0, vatRate: 22, risk: 'green' }
+            ]
+        };
+
+        let currentUser = null;
+
+        // ===== РАСЧЁТЫ =====
+        function calculateCustomsFee(value) {
+            if (value <= 200000) return 775;
+            if (value <= 450000) return 1550;
+            if (value <= 1200000) return 3100;
+            if (value <= 2600000) return 8530;
+            if (value <= 6300000) return 12000;
+            if (value <= 10000000) return 15500;
+            if (value <= 18700000) return 20000;
+            if (value <= 26400000) return 26000;
+            if (value <= 31000000) return 31000;
+            return 32500;
+        }
+
+        function calculateDeal(deal) {
+            const duty = Math.round(deal.value * deal.dutyRate / 100);
+            const vat = Math.round((deal.value + duty) * deal.vatRate / 100);
+            const fee = calculateCustomsFee(deal.value);
+            const total = duty + vat + fee;
+            return { ...deal, duty, vat, fee, total };
+        }
+
+        // ===== НАВИГАЦИЯ =====
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+
+            if (screenId === 'dashboard' && currentUser) {
+                renderDashboard();
+            }
+        }
+
+        // ===== ПРОВЕРКА СДЕЛКИ =====
+        function checkDeal() {
+            const inputId = document.getElementById('searchId').value.trim();
+            const errorDiv = document.getElementById('checkError');
+            const resultBlock = document.getElementById('resultBlock');
+
+            errorDiv.style.display = 'none';
+            resultBlock.style.display = 'none';
+
+            if (!inputId) {
+                errorDiv.textContent = 'Пожалуйста, введите ID сделки.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const deal = checkDeals.find(d => d.id === inputId);
+
+            if (!deal) {
+                errorDiv.textContent = `Сделка с ID «${inputId}» не найдена в базе данных СВХ.`;
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const d = calculateDeal(deal);
+            const riskClass = d.risk === 'green' ? 'risk-green' : (d.risk === 'yellow' ? 'risk-yellow' : 'risk-red');
+            const riskText = d.risk === 'green' ? '🟢 ЗЕЛЁНЫЙ (Выпуск разрешен)' : (d.risk === 'yellow' ? '🟡 ЖЁЛТЫЙ (Доп. проверка)' : '🔴 КРАСНЫЙ (Досмотр)');
+
+            let noteHtml = '';
+            if (d.risk !== 'green' && d.note) {
+                noteHtml = `<div class="inspector-note ${d.risk === 'red' ? 'danger' : ''}"><strong>Комментарий инспектора:</strong><br>${d.note}</div>`;
+            }
+
+            resultBlock.innerHTML = `
+                <div class="result-box">
+                    <div class="risk-header ${riskClass}">
+                        <h2>${riskText}</h2>
+                        <p>ID: ${d.id}</p>
+                    </div>
+                    ${noteHtml}
+                    <table class="details-table">
+                        <tr><td>Маршрут</td><td>${d.sender} → ${d.destination}</td></tr>
+                        <tr><td>Товар</td><td>${d.product}</td></tr>
+                        <tr><td>Код ТНВЭД</td><td>${d.tnvedCode}</td></tr>
+                        <tr><td>Таможенная стоимость</td><td>${d.value.toLocaleString('ru-RU')} ₽</td></tr>
+                        <tr><td>Ставка ввозной пошлины</td><td>${d.dutyRate}%</td></tr>
+                        <tr><td>Сумма ввозной пошлины</td><td>${d.duty.toLocaleString('ru-RU')} ₽</td></tr>
+                        <tr><td>НДС (${d.vatRate}%)</td><td>${d.vat.toLocaleString('ru-RU')} ₽</td></tr>
+                        <tr><td>Таможенный сбор</td><td>${d.fee.toLocaleString('ru-RU')} ₽</td></tr>
+                        <tr class="total-row"><td><strong>ИТОГО таможенных платежей</strong></td><td><strong>${d.total.toLocaleString('ru-RU')} ₽</strong></td></tr>
+                    </table>
+                </div>
+            `;
+            resultBlock.style.display = 'block';
+        }
+
+        // ===== ДОБАВИТЬ ДАННЫЕ =====
+        function addNewDeal() {
+            const sender = document.getElementById('newSender').value;
+            const dest = document.getElementById('newDest').value;
+            const product = document.getElementById('newProduct').value;
+            const code = document.getElementById('newCode').value;
+            const value = parseFloat(document.getElementById('newValue').value);
+            const successDiv = document.getElementById('addSuccess');
+
+            if (!sender || !product || !value) {
+                alert('Заполните основные поля!');
+                return;
+            }
+
+            const newId = (checkDeals.length + 100011).toString();
+            let risk = 'green';
+            let note = '';
+
+            if (value > 46000000) {
+                risk = 'red';
+                note = 'Автоматически: высокая стоимость требует проверки.';
+            } else if (value > 9200000) {
+                risk = 'yellow';
+                note = 'Автоматически: требуется верификация инвойса.';
+            }
+
+            checkDeals.push({
+                id: newId,
+                sender,
+                destination: dest,
+                product,
+                tnvedCode: code || '0000 00 000 0',
+                value,
+                dutyRate: 10,
+                vatRate: 22,
+                risk,
+                note
+            });
+
+            successDiv.innerHTML = `<strong>✅ Данные успешно загружены!</strong><br>Ваш ID сделки: <span class="big-id">${newId}</span><br>Используйте этот ID для проверки.`;
+            successDiv.style.display = 'block';
+
+            document.getElementById('newSender').value = '';
+            document.getElementById('newDest').value = '';
+            document.getElementById('newProduct').value = '';
+            document.getElementById('newCode').value = '';
+            document.getElementById('newValue').value = '';
+        }
+
+        // ===== ВХОД =====
+        function doLogin() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            const err = document.getElementById('loginError');
+
+            if (users[u] && users[u].password === p) {
+                currentUser = u;
+                err.style.display = 'none';
+                showScreen('dashboard');
+            } else {
+                err.textContent = 'Неверный логин или пароль';
+                err.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            showScreen('login');
+        }
+
+        // ===== ЛИЧНЫЙ КАБИНЕТ =====
+        function renderDashboard() {
+            const user = users[currentUser];
+            const deals = userDeals[currentUser] || [];
+
+            const totalDeals = deals.length;
+            const totalValue = deals.reduce((sum, d) => sum + d.value, 0);
+            const totalPayments = deals.reduce((sum, d) => {
+                const calc = calculateDeal(d);
+                return sum + calc.total;
+            }, 0);
+            const greenCount = deals.filter(d => d.risk === 'green').length;
+            const yellowCount = deals.filter(d => d.risk === 'yellow').length;
+            const redCount = deals.filter(d => d.risk === 'red').length;
+
+            const avatarLetter = user.contactPerson.charAt(0);
+
+            let dealsHtml = deals.map(d => {
+                const calc = calculateDeal(d);
+                const badgeClass = d.risk === 'green' ? 'badge-green' : (d.risk === 'yellow' ? 'badge-yellow' : 'badge-red');
+                const badgeText = d.risk === 'green' ? '🟢 Зелёный' : (d.risk === 'yellow' ? '🟡 Жёлтый' : '🔴 Красный');
+
+                return `
+                    <tr>
+                        <td class="mono">${calc.id}</td>
+                        <td>${new Date().toLocaleDateString('ru-RU')}</td>
+                        <td><strong>${calc.product}</strong></td>
+                        <td class="route">${calc.sender} → ${calc.destination}</td>
+                        <td>${calc.value.toLocaleString('ru-RU')} ₽</td>
+                        <td><strong>${calc.total.toLocaleString('ru-RU')} ₽</strong></td>
+                        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('dashboardContent').innerHTML = `
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">${avatarLetter}</div>
+                        <div class="profile-info">
+                            <h2>${user.companyName}</h2>
+                            <p class="profile-contact">${user.contactPerson}</p>
+                            <p class="profile-email"> ${user.email}</p>
+                        </div>
+                        <button class="btn-logout" onclick="logout()">Выйти</button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-content">
+                            <div class="stat-value">${totalDeals}</div>
+                            <div class="stat-label">Всего сделок</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"></div>
+                        <div class="stat-content">
+                            <div class="stat-value">${totalValue.toLocaleString('ru-RU')} ₽</div>
+                            <div class="stat-label">Общая стоимость</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🧾</div>
+                        <div class="stat-content">
+                            <div class="stat-value">${totalPayments.toLocaleString('ru-RU')} ₽</div>
+                            <div class="stat-label">Таможенные платежи</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🚦</div>
+                        <div class="stat-content">
+                            <div class="stat-value">${greenCount} / ${yellowCount} / ${redCount}</div>
+                            <div class="stat-label">🟢 / 🟡 /  рисков</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin: 2rem 0 1rem; color: #1a1a2e;">📋 История сделок</h3>
+
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Дата</th>
+                            <th>Товар</th>
+                            <th>Маршрут</th>
+                            <th>Стоимость</th>
+                            <th>Платежи</th>
+                            <th>Риск</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${dealsHtml}
+                    </tbody>
+                </table>
+            `;
+        }
+    </script>
+</body>
+</html>
